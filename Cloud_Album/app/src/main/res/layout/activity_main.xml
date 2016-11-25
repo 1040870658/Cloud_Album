@@ -8,10 +8,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="hk.hku.yechen.cloud_album.MainActivity">
+    tools:context="hk.hku.yechen.cloud_album.View.DisplayActivity">
 
-    <TextView
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/vv_main"/>
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Start"
+        android:id="@+id/bt_start"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
