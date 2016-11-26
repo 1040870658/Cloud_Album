@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import hk.hku.yechen.cloud_album.Model.Album;
 import hk.hku.yechen.cloud_album.Presenter.VideoManager;
 import hk.hku.yechen.cloud_album.R;
 
@@ -29,6 +30,7 @@ public class AlbumListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.album_list_layout);
+        albums = new ArrayList();
         videoManager = new VideoManager(albums);
         new Thread(videoManager).start();
         linearLayoutManager = new LinearLayoutManager(this);
@@ -50,14 +52,15 @@ public class AlbumListActivity extends Activity {
         ib_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* invoke core function of the project provided by Dr.Chim */
+               Intent intent = new Intent(AlbumListActivity.this,VideoCaptureActivity.class);
+                startActivity(intent);
             }
         });
     }
     private void initData(){
 
         /* temporary test data*/
-        albums = new ArrayList();
+        if(albums.size() == 0)
         for(int i = 0;i != 20;i ++){
             albums.add(i,"album_"+i);
         }

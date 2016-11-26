@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import hk.hku.yechen.cloud_album.Model.Album;
 import hk.hku.yechen.cloud_album.R;
 
 /**
@@ -176,7 +177,7 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
             }
         });
 
-        String url = getIntent().getExtras().get("url").toString();
+        String url = Album.SERVER_ADDRESS;
         openBrowser(url);
 
         setContentView(mWebView);
@@ -188,6 +189,7 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
         if(!url.trim().startsWith("http://")){
             url="http://"+url.trim();
         }
+        Log.e("url",url);
         mWebView.loadUrl(url.trim());
     }
 

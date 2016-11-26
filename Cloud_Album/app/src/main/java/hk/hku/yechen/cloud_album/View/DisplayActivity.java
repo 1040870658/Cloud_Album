@@ -31,7 +31,7 @@ public class DisplayActivity extends Activity {
     private MediaController mediaController;
 
     /*temporary test data*/
-    private final String url ="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    private final String url ="http://i.cs.hku.hk/~cfang/test/upload.php?video=20161124_144139.mp4";
 
     private String video_url;
     private Uri uri;
