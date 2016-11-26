@@ -29,7 +29,8 @@ public class AlbumListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.album_list_layout);
-        videoManager = new VideoManager();
+        videoManager = new VideoManager(albums);
+        new Thread(videoManager).start();
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
@@ -61,5 +62,4 @@ public class AlbumListActivity extends Activity {
             albums.add(i,"album_"+i);
         }
     }
-
 }
