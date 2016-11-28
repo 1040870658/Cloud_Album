@@ -35,7 +35,6 @@ public class VideoManager implements Runnable {
 
     public VideoManager(){}
 
-    public VideoManager(List albums){
     public VideoManager(List albums,Handler handler){
         this.handler = handler;
         this.albums = albums;
