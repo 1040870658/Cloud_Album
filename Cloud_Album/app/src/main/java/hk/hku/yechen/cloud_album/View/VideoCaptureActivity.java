@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import hk.hku.yechen.cloud_album.Presenter.VideoCapture;
+import hk.hku.yechen.cloud_album.Presenter.VideoManager;
 import hk.hku.yechen.cloud_album.R;
 
 /**
@@ -33,6 +34,7 @@ public class VideoCaptureActivity extends Activity{
     private static final int VIDEO_CAPTURE_REQUEST = 1111;
     private static final int VIDEO_CAPTURE_PERMISSION = 2222;
     private VideoView mVideoView;
+    private VideoManager videoManager = new VideoManager();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +141,9 @@ public class VideoCaptureActivity extends Activity{
             String path = mediaStorageDir.getPath() + File.separator;
 
             mediaFile = new File(path + "VID_" + timestamp + ".mp4");
+
+            //to do
+            videoManager.postVideoToServer(mediaFile);
 
             Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
             //5. Return the file's URI
