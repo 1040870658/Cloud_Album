@@ -32,7 +32,7 @@ import hk.hku.yechen.cloud_album.R;
 
 public class VideoCaptureActivity extends Activity{
     private static final String TAG = VideoCaptureActivity.class.getSimpleName();
-    String uploadFileName ;
+    private String uploadFileName ;
 
     private static final int VIDEO_CAPTURE_REQUEST = 1111;
     private static final int VIDEO_CAPTURE_PERMISSION = 2222;
@@ -140,7 +140,7 @@ public class VideoCaptureActivity extends Activity{
             uploadFileName = new String(path + "VID_" + timestamp + ".mp4");
             mediaFile = new File(path + "VID_" + timestamp + ".mp4");
 
-            videoManager.postVideoToServer(mediaFile,uploadFileName);
+            videoManager.postVideoToServer(uploadFileName);
 
             Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
             //5. Return the file's URI
