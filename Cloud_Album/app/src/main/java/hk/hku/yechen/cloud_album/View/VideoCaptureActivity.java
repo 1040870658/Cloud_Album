@@ -2,6 +2,8 @@ package hk.hku.yechen.cloud_album.View;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -30,18 +32,18 @@ import hk.hku.yechen.cloud_album.R;
 
 public class VideoCaptureActivity extends Activity{
     private static final String TAG = VideoCaptureActivity.class.getSimpleName();
+    String uploadFileName ;
 
     private static final int VIDEO_CAPTURE_REQUEST = 1111;
     private static final int VIDEO_CAPTURE_PERMISSION = 2222;
     private VideoView mVideoView;
-    private VideoManager videoManager = new VideoManager();
+    private static VideoManager videoManager = new VideoManager();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_capture_layout);
 
         Log.d(TAG, "************************************** enter create...");
-        mVideoView = (VideoView) findViewById(R.id.video_image);
 
         ArrayList<String> permissions = new ArrayList<>();
 
@@ -72,20 +74,17 @@ public class VideoCaptureActivity extends Activity{
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VIDEO_CAPTURE_REQUEST && resultCode == RESULT_OK) {
+    protected void onActivityResult(final int requestCode, final int resultCode, Intent data) {
 
-            Uri videoUri = data.getData();
-
-            MediaController mediaController= new MediaController(this);
-            mediaController.setAnchorView(mVideoView);
-
-            mVideoView.setMediaController(mediaController);
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.requestFocus();
-
-            mVideoView.start();
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
+        builder.setMessage("Recorded.");
+        builder.setTitle("Video Record");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).show();
     }
 
     @Override
@@ -109,9 +108,8 @@ public class VideoCaptureActivity extends Activity{
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, viduri);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60);
         intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) (4 * 1024 * 1024));
-
         startActivityForResult(intent, VIDEO_CAPTURE_REQUEST);
     }
 
@@ -139,11 +137,10 @@ public class VideoCaptureActivity extends Activity{
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
 
             String path = mediaStorageDir.getPath() + File.separator;
-
+            uploadFileName = new String(path + "VID_" + timestamp + ".mp4");
             mediaFile = new File(path + "VID_" + timestamp + ".mp4");
 
-            //to do
-            videoManager.postVideoToServer(mediaFile);
+            videoManager.postVideoToServer(mediaFile,uploadFileName);
 
             Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
             //5. Return the file's URI
