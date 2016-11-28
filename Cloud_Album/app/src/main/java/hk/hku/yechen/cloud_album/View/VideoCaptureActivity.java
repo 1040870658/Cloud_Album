@@ -36,7 +36,6 @@ public class VideoCaptureActivity extends Activity{
 
     private static final int VIDEO_CAPTURE_REQUEST = 1111;
     private static final int VIDEO_CAPTURE_PERMISSION = 2222;
-    private VideoView mVideoView;
     private static VideoManager videoManager = new VideoManager();
 
     public void onCreate(Bundle savedInstanceState) {

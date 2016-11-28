@@ -37,9 +37,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         AlbumViewHolder albumViewHolder = (AlbumViewHolder)holder;
         Album album = (Album)datas.get(position);
         ((AlbumViewHolder) holder).album = album;
-        albumViewHolder.textView.setText(album.getAddress());
-      //  albumViewHolder.imageTextView.setText(album.getAddress());
-        albumViewHolder.timestampTextView.setText(album.getName());
+        albumViewHolder.textView.setText(album.getName());
+        albumViewHolder.timestampTextView.setText(album.getTimestamp());
     }
 
     @Override
@@ -60,7 +59,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context,DisplayActivity.class);
-                    intent.putExtra("address",album.getAddress());
+                    intent.putExtra("address",album.getName());
                     intent.putExtra("albums",(Serializable)datas);
                     context.startActivity(intent);
                 }

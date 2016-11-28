@@ -1,6 +1,7 @@
 package hk.hku.yechen.cloud_album.View;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -36,6 +37,7 @@ public class DisplayActivity extends Activity {
     private ViewPager viewPager;
     private List textViews;
     private List albums;
+    private ProgressBar progressBar;
 
     private String video_url = Album.UPLOAD_ADDRESS;
     private Uri uri;
@@ -48,6 +50,8 @@ public class DisplayActivity extends Activity {
         video_url += getIntent().getStringExtra("address");
         albums = (List) getIntent().getSerializableExtra("albums");
         init();
+        progressBar = (ProgressBar) findViewById(R.id.pb_dlg);
+        progressBar.setVisibility(View.VISIBLE);
         viewPager = (ViewPager) findViewById(R.id.vp_albums);
         viewPager.setAdapter(new vpAdapter(textViews));
         viewPager.setOffscreenPageLimit(5);
@@ -62,7 +66,13 @@ public class DisplayActivity extends Activity {
         videoView.setMediaController(mediaController);
         videoView.setVideoURI(uri);
         videoView.requestFocus();
-        videoView.start();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                progressBar.setVisibility(View.INVISIBLE);
+                videoView.start();
+            }
+        });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -73,10 +83,10 @@ public class DisplayActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 videoView.setMediaController(mediaController);
                 videoView.setVideoURI(uri);
                 videoView.requestFocus();
-                videoView.start();
             }
         });
 
@@ -88,13 +98,13 @@ public class DisplayActivity extends Activity {
         for(int i = 0;i < albums.size();i ++){
             final Album album = (Album) albums.get(i);
             textView = (TextView) LayoutInflater.from(DisplayActivity.this).inflate(R.layout.album_image,null,false);
-            textView.setText(album.getAddress());
+            textView.setText(album.getName());
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    video_url = Album.UPLOAD_ADDRESS + album.getAddress();
+                    progressBar.setVisibility(View.VISIBLE);
+                    video_url = Album.UPLOAD_ADDRESS + album.getName();
                     videoView.setVideoURI(Uri.parse(video_url));
-                    videoView.start();
                 }
             });
             textViews.add(textView);
