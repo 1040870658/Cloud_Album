@@ -2,12 +2,15 @@ package hk.hku.yechen.cloud_album.Model;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by yechen on 2016/11/25.
  */
 
-public class Album {
-    public final static String SERVER_ADDRESS = "http://i.cs.hku.hk/~cfang/test/upload.htm";
+public class Album implements Serializable{
+    public final static String SERVER_ADDRESS = "http://i.cs.hku.hk/~cfang/app/upload.htm";
+    public final static String UPLOAD_ADDRESS = "http://i.cs.hku.hk/~cfang/app/videos/";
     private int id;
     private String name;
     private String title;
