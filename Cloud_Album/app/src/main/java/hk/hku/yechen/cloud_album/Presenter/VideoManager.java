@@ -2,6 +2,7 @@ package hk.hku.yechen.cloud_album.Presenter;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.ViewManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,19 +20,22 @@ import java.net.URL;
 import java.util.List;
 
 import hk.hku.yechen.cloud_album.Model.Album;
+import hk.hku.yechen.cloud_album.View.VideoCaptureActivity;
+
 /**
  * Created by yechen on 2016/11/24.
  */
 
 public class VideoManager implements Runnable {
 
+    private static final String TAG = ViewManager.class.getSimpleName();
     public static final int COMPELETION = 0x00000001;
     private  List<Album> albums;
     private Handler handler;
 
-    private String end = "\r\n";
-    private String twoHyphens = "--";
-    private String boundary = "******";
+    private static String lineEnd = "\r\n";
+    private static String twoHyphens = "--";
+    private static String boundary = "*****";
 
     private static String uploadUrl = "https://i.cs.hku.hk/~cfang/app/upload.php";
     private static String urlPath  = "https://i.cs.hku.hk/~cfang/app/getlist.php";
@@ -78,44 +82,73 @@ public class VideoManager implements Runnable {
 //        return outputStream.toByteArray();
 //    }
 
-    public void postVideoToServer(File uploadFile, String uploadFileName){
-        try {
-            URL url = new URL(uploadUrl);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setChunkedStreamingMode(100 * 1024 * 1024);
-            httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.setUseCaches(false);
-            // 使用POST方法
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
-            httpURLConnection.setRequestProperty("Charset", "UTF-8");
-            httpURLConnection.setRequestProperty("Content-Type",
-                    "multipart/form-data;boundary=" + boundary);
-            DataOutputStream dos = new DataOutputStream(httpURLConnection.getOutputStream());
-            dos.writeBytes(twoHyphens + boundary + end);
-            dos.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\""
-                    + uploadFileName.substring(uploadFileName.lastIndexOf("/") + 1)
-                    + "\""
-                    + end);
-            dos.writeBytes(end);
+    public void postVideoToServer(String uploadFileName){
+            Log.i("VideoManager:",uploadFileName);
 
-            FileInputStream fis = new FileInputStream(uploadFile);
-            byte[] buffer = new byte[8192]; // 8k
-            int count = 0;
-            // 读取文件
-            while ((count = fis.read(buffer)) != -1)
-            {
-                dos.write(buffer, 0, count);
+            HttpURLConnection conn = null;
+            DataOutputStream dos = null;
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+            File sourceFile = new File(uploadFileName);
+            if (sourceFile.isFile()) {
+                try{
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    URL url = new URL(uploadUrl);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true); // Allow Inputs
+                    conn.setDoOutput(true); // Allow Outputs
+                    conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    conn.setRequestProperty("file", uploadFileName);
+
+                    dos = new DataOutputStream(conn.getOutputStream());
+
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\""
+                            + uploadFileName + "\"" + lineEnd);
+
+                    dos.writeBytes(lineEnd);
+
+                    // create a buffer of maximum size
+                    bytesAvailable = fileInputStream.available();
+
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0) {
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    }
+
+                    // send multipart form data necesssary after file
+                    // data...
+                    dos.writeBytes(lineEnd);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                    // Responses from the server (code and message)
+                    int serverResponseCode = conn.getResponseCode();
+                    String serverResponseMessage = conn.getResponseMessage();
+                    if(serverResponseCode == 200){
+                        Log.i(TAG,"upload success");
+                    }
+                    Log.i(TAG,"Server Response is: " + serverResponseMessage + ": " + serverResponseCode);
+                    // close the streams //
+                    fileInputStream.close();
+                    dos.flush();
+                    dos.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-            fis.close();
-
-            dos.writeBytes(end);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
-            dos.flush();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     public List<Album> getAlbums(){
