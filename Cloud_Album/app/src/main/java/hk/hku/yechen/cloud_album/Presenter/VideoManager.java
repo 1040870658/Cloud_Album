@@ -1,5 +1,6 @@
 package hk.hku.yechen.cloud_album.Presenter;
 
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -7,7 +8,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,7 +22,10 @@ import hk.hku.yechen.cloud_album.Model.Album;
 
 public class VideoManager implements Runnable {
 
+    public static final int COMPELETION = 0x00000001;
     private  List<Album> albums;
+    private Handler handler;
+
     private String end = "\r\n";
     private String twoHyphens = "--";
     private String boundary = "******";
@@ -33,6 +36,8 @@ public class VideoManager implements Runnable {
     public VideoManager(){}
 
     public VideoManager(List albums){
+    public VideoManager(List albums,Handler handler){
+        this.handler = handler;
         this.albums = albums;
     }
 
@@ -71,14 +76,8 @@ public class VideoManager implements Runnable {
 //        return outputStream.toByteArray();
 //    }
 
-    public void postVideoToServer(File uploadFile){
-        try {
-            URL url = new URL(uploadUrl);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setChunkedStreamingMode();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public void postVideoToServer(){
+
     }
 
     public List<Album> getAlbums(){
@@ -110,6 +109,7 @@ public class VideoManager implements Runnable {
     public void run() {
         try {
             getDataFromServer();
+            handler.sendEmptyMessage(COMPELETION);
         } catch (Exception e) {
             e.printStackTrace();
         }
