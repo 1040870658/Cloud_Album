@@ -15,11 +15,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.AlbumListActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
         <activity android:name=".View.DisplayActivity"
             android:configChanges="orientation|screenSize">
+        </activity>
+        <activity android:name=".View.AlbumListActivity"
+            >
             <intent-filter>
               <action android:name="android.intent.action.MAIN" />
               <category android:name="android.intent.category.LAUNCHER" />
