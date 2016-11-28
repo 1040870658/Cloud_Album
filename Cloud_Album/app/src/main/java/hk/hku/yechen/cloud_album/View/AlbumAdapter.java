@@ -1,6 +1,7 @@
 package hk.hku.yechen.cloud_album.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import hk.hku.yechen.cloud_album.Model.Album;
 import hk.hku.yechen.cloud_album.R;
 
 /**
@@ -29,19 +31,29 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((AlbumViewHolder)holder).textView.setText((String)datas.get(position));
+        AlbumViewHolder albumViewHolder = (AlbumViewHolder)holder;
+        ((AlbumViewHolder) holder).album = (Album)datas.get(position);
+        albumViewHolder.textView.setText((String)datas.get(position));
     }
 
     @Override
     public int getItemCount() {
         return datas.size();
     }
-    public static class AlbumViewHolder extends RecyclerView.ViewHolder{
+    public  class AlbumViewHolder extends RecyclerView.ViewHolder{
         public TextView textView;
+        public Album album;
         public AlbumViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tv_album_title);
-
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,DisplayActivity.class);
+                    intent.putExtra("address",album.getAddress());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

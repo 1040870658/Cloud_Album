@@ -1,5 +1,6 @@
 package hk.hku.yechen.cloud_album.Presenter;
 
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -21,13 +22,15 @@ import hk.hku.yechen.cloud_album.Model.Album;
 
 public class VideoManager implements Runnable {
 
+    public static final int COMPELETION = 0x00000001;
     private  List<Album> albums;
-
+    private Handler handler;
 
 
     private static String urlPath  = "https://i.cs.hku.hk/~cfang/app/getlist.php";
 
-    public VideoManager(List albums){
+    public VideoManager(List albums,Handler handler){
+        this.handler = handler;
         this.albums = albums;
     }
 
@@ -99,6 +102,7 @@ public class VideoManager implements Runnable {
     public void run() {
         try {
             getDataFromServer();
+            handler.sendEmptyMessage(COMPELETION);
         } catch (Exception e) {
             e.printStackTrace();
         }
