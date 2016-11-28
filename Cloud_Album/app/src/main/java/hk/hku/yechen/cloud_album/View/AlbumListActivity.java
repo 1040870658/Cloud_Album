@@ -50,7 +50,6 @@ public class AlbumListActivity extends Activity {
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
-     //   initData();
         albumList.setAdapter(albumAdapter);
 
         ib_upload = (ImageButton) findViewById(R.id.ib_upload);
@@ -70,13 +69,5 @@ public class AlbumListActivity extends Activity {
                 startActivity(intent);
             }
         });
-    }
-    private void initData(){
-
-        /* temporary test data*/
-        if(albums.size() == 0)
-        for(int i = 0;i != 20;i ++){
-            albums.add(i,"album_"+i);
-        }
     }
 }

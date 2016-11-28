@@ -5,26 +5,20 @@ import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +37,6 @@ public class DisplayActivity extends Activity {
     private List textViews;
     private List albums;
 
-    /*temporary test data*/
-    private final String url ="http://i.cs.hku.hk/~cfang/app/videos/20161124_144139.mp4";
-
     private String video_url = Album.UPLOAD_ADDRESS;
     private Uri uri;
     private RelativeLayout.LayoutParams full_screen_param;
@@ -61,13 +52,11 @@ public class DisplayActivity extends Activity {
         viewPager.setAdapter(new vpAdapter(textViews));
         viewPager.setOffscreenPageLimit(5);
         viewPager.setPageMargin(2);
-        Log.e("video_url",video_url);
-        full_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-        full_screen_param.addRule(RelativeLayout.CENTER_IN_PARENT);
-        normal_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        normal_screen_param.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         mediaController = new MediaController(this);
         videoView = (VideoView) findViewById(R.id.vv_main);
+        full_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        full_screen_param.addRule(RelativeLayout.CENTER_IN_PARENT);
+        normal_screen_param = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
         button = (Button) findViewById(R.id.bt_start);
         uri = Uri.parse(video_url);
         videoView.setMediaController(mediaController);
