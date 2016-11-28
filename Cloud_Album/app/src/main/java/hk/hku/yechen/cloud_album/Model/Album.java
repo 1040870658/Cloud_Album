@@ -16,9 +16,9 @@ public class Album implements Serializable{
     private String title;
     private String address;
     private String timestamp;
-    public Album(int id,String address,String name){
+    public Album(int id,String name, String timestamp){
         this.id = id;
-        this.address = address;
+        this.timestamp = timestamp;
         this.name = name;
     }
 

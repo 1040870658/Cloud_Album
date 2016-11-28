@@ -75,7 +75,7 @@ public class VideoCaptureActivity extends Activity{
     }
 
     protected void onActivityResult(final int requestCode, final int resultCode, Intent data) {
-
+        new Thread(new UploadService()).start();
         AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
         builder.setMessage("Recorded.");
         builder.setTitle("Video Record");
@@ -140,7 +140,7 @@ public class VideoCaptureActivity extends Activity{
             uploadFileName = new String(path + "VID_" + timestamp + ".mp4");
             mediaFile = new File(path + "VID_" + timestamp + ".mp4");
 
-            videoManager.postVideoToServer(uploadFileName);
+
 
             Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
             //5. Return the file's URI
@@ -157,6 +157,12 @@ public class VideoCaptureActivity extends Activity{
             return true;
         } else {
             return false;
+        }
+    }
+    private class UploadService implements Runnable{
+        @Override
+        public void run() {
+            videoManager.postVideoToServer(uploadFileName);
         }
     }
 }

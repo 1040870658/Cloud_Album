@@ -83,8 +83,6 @@ public class VideoManager implements Runnable {
 //    }
 
     public void postVideoToServer(String uploadFileName){
-            Log.i("VideoManager:",uploadFileName);
-
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
             int bytesRead, bytesAvailable, bufferSize;
