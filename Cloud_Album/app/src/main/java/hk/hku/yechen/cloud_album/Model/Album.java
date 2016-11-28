@@ -7,7 +7,7 @@ import android.net.Uri;
  */
 
 public class Album {
-    public final static String SERVER_ADDRESS = "http://i.cs.hku.hk/~cfang/test/upload.htm";
+    public final static String SERVER_ADDRESS = "http://i.cs.hku.hk/~cfang/app/upload.htm";
     private int id;
     private String name;
     private String title;

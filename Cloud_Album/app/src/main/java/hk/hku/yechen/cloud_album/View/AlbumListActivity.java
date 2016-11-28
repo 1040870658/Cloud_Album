@@ -3,6 +3,8 @@ package hk.hku.yechen.cloud_album.View;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,6 +22,8 @@ import hk.hku.yechen.cloud_album.R;
  */
 public class AlbumListActivity extends Activity {
 
+    private AlbumAdapter albumAdapter;
+    private Handler handler;
     private VideoManager videoManager;
     private RecyclerView albumList;
     private List albums;
@@ -29,15 +33,25 @@ public class AlbumListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.album_list_layout);
         albums = new ArrayList();
-        videoManager = new VideoManager(albums);
+        albumAdapter = new AlbumAdapter(AlbumListActivity.this,albums);
+        setContentView(R.layout.album_list_layout);
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case VideoManager.COMPELETION:
+                        albumAdapter.notifyDataSetChanged();
+                }
+            }
+        };
+        videoManager = new VideoManager(albums,handler);
         new Thread(videoManager).start();
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
-        initData();
-        albumList.setAdapter(new AlbumAdapter(AlbumListActivity.this,albums));
+     //   initData();
+        albumList.setAdapter(albumAdapter);
 
         ib_upload = (ImageButton) findViewById(R.id.ib_upload);
         ib_record = (ImageButton) findViewById(R.id.ib_record);
