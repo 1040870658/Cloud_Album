@@ -3,11 +3,14 @@ package hk.hku.yechen.cloud_album.View;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import hk.hku.yechen.cloud_album.Model.Album;
@@ -34,9 +37,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         AlbumViewHolder albumViewHolder = (AlbumViewHolder)holder;
         Album album = (Album)datas.get(position);
         ((AlbumViewHolder) holder).album = album;
-        albumViewHolder.textView.setText(album.getName());
-        albumViewHolder.imageTextView.setText(album.getName());
-        albumViewHolder.timestampTextview.setText(album.getTimestamp());
+        albumViewHolder.textView.setText(album.getAddress());
+      //  albumViewHolder.imageTextView.setText(album.getAddress());
+        albumViewHolder.timestampTextView.setText(album.getName());
     }
 
     @Override
@@ -45,19 +48,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
     public  class AlbumViewHolder extends RecyclerView.ViewHolder{
         public TextView textView;
-        public TextView imageTextView;
-        public TextView timestampTextview;
+        public ImageView imageTextView;
+        public TextView timestampTextView;
         public Album album;
         public AlbumViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tv_album_title);
-            imageTextView = (TextView) itemView.findViewById(R.id.tv_album_image);
-            timestampTextview = (TextView) itemView.findViewById(R.id.tv_album_timestamp);
+            imageTextView = (ImageView) itemView.findViewById(R.id.tv_album_image);
+            timestampTextView = (TextView) itemView.findViewById(R.id.tv_album_timestamp);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context,DisplayActivity.class);
                     intent.putExtra("address",album.getAddress());
+                    intent.putExtra("albums",(Serializable)datas);
                     context.startActivity(intent);
                 }
             });
