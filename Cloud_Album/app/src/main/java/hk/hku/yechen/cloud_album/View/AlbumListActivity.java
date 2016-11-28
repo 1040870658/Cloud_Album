@@ -50,7 +50,7 @@ public class AlbumListActivity extends Activity {
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
-        initData();
+     //   initData();
         albumList.setAdapter(albumAdapter);
 
         ib_upload = (ImageButton) findViewById(R.id.ib_upload);

@@ -33,7 +33,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         AlbumViewHolder albumViewHolder = (AlbumViewHolder)holder;
         ((AlbumViewHolder) holder).album = (Album)datas.get(position);
-        albumViewHolder.textView.setText((String)datas.get(position));
+        albumViewHolder.textView.setText((String)((Album) datas.get(position)).getName());
     }
 
     @Override
