@@ -8,13 +8,31 @@ import android.net.Uri;
 
 public class Album {
     public final static String SERVER_ADDRESS = "http://i.cs.hku.hk/~cfang/test/upload.htm";
+    private int id;
+    private String name;
     private String title;
     private String address;
     private String timestamp;
-    public Album(String title,String address,String timestamp){
-        this.title = title;
+    public Album(int id,String address,String name){
+        this.id = id;
         this.address = address;
-        this.timestamp = timestamp;
+        this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setAddress(String address) {
