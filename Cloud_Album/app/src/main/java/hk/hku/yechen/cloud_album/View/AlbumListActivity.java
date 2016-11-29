@@ -46,7 +46,7 @@ public class AlbumListActivity extends Activity {
             }
         };
         videoManager = new VideoManager(albums,handler);
-        new Thread(videoManager).start();
+        //new Thread(videoManager).start();
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
@@ -69,5 +69,11 @@ public class AlbumListActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onRestart();
+        new Thread(videoManager).start();
     }
 }

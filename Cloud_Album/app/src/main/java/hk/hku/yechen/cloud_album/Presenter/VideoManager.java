@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import hk.hku.yechen.cloud_album.Model.Album;
@@ -60,6 +61,7 @@ public class VideoManager implements Runnable {
     }
 
     private void parseJSON (InputStream inStream) throws Exception{
+        albums.clear();
         String json = convertStreamToString(inStream);
         Log.d("data:",json);
         JSONArray array = new JSONArray(json);
