@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -42,6 +43,7 @@ public class DisplayActivity extends Activity {
     private List albums;
     private ProgressBar progressBar;
     private int selected_index;
+    private DisplayMetrics metrics;
 
     private String video_url = Album.UPLOAD_ADDRESS;
     private Uri uri;
@@ -51,6 +53,7 @@ public class DisplayActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        metrics = getResources().getDisplayMetrics();
         rl_main = (RelativeLayout) findViewById(R.id.rl_fmain);
         selected_index = -1;
         video_url += getIntent().getStringExtra("address");
@@ -67,6 +70,7 @@ public class DisplayActivity extends Activity {
         full_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
         full_screen_param.addRule(RelativeLayout.CENTER_IN_PARENT);
         normal_screen_param = (RelativeLayout.LayoutParams) rl_main.getLayoutParams();
+        normal_screen_param.height = metrics.heightPixels/5*3;
         videoView.setMediaController(mediaController);
         uri = Uri.parse(video_url);
         videoView.setVideoURI(uri);
