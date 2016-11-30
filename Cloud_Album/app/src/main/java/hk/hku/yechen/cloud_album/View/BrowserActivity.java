@@ -7,22 +7,29 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,16 +42,17 @@ import hk.hku.yechen.cloud_album.R;
  * Created by yechen on 2016/11/25.
  */
 
-public class BrowserActivity extends Activity{// Called when the activity is first created.
+public class BrowserActivity extends Activity {// Called when the activity is first created.
 
     private static final String TAG = BrowserActivity.class.getSimpleName();
-
+    public static final int RETURNFROMUPDATE = 0x00000003;
     public static final int INPUT_FILE_REQUEST_CODE = 1;
     public static final String EXTRA_FROM_NOTIFICATION = "EXTRA_FROM_NOTIFICATION";
 
     private WebView mWebView;
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraVideoPath;
+    private Handler handler;
 
     static final int WEB_VIEW_PERMISSION = 7777;
 
@@ -72,19 +80,12 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
                     results = new Uri[]{Uri.parse(dataString)};
                 }
             }
+
         }
 
         mFilePathCallback.onReceiveValue(results);
         mFilePathCallback = null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(BrowserActivity.this);
-        builder.setMessage("Uploaded.");
-        builder.setTitle("Video Uploaded");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).show();
+
         return;
     }
 
@@ -92,6 +93,24 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browser_activity);
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case RETURNFROMUPDATE:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BrowserActivity.this);
+                        builder.setMessage("Upadated.");
+                        builder.setTitle("Video Updated");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        }).show();
+                }
+            }
+        };
 
         ArrayList<String> permissions = new ArrayList<>();
 
@@ -104,7 +123,7 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
             permissions.add(Manifest.permission.INTERNET);
         }
 
-        if(permissions.size() > 0) {
+        if (permissions.size() > 0) {
             String[] permiss = permissions.toArray(new String[0]);
 
             ActivityCompat.requestPermissions(BrowserActivity.this, permiss,
@@ -118,10 +137,9 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == WEB_VIEW_PERMISSION) {
-            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 StartWebView();
-            }
-            else {
+            } else {
                 // Your app will not have this permission. Turn off all functions
                 // that require this permission or it will force close like your
                 // original question
@@ -129,65 +147,14 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
         }
     }
 
-    private void StartWebView(){
+    private void StartWebView() {
         mWebView = (WebView) findViewById(R.id.wv_browser);
         //progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 
         mWebView = new WebView(this);
         setUpWebViewDefaults(mWebView);
 
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            public boolean onShowFileChooser(
-                    WebView webView, ValueCallback<Uri[]> filePathCallback,
-                    WebChromeClient.FileChooserParams fileChooserParams) {
-                if (mFilePathCallback != null) {
-                    mFilePathCallback.onReceiveValue(null);
-                }
-                mFilePathCallback = filePathCallback;
-
-                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-                // Create the File where the video should go
-                File videoFile = null;
-                try {
-                    videoFile = createVideoFile();
-                    takeVideoIntent.putExtra("VideoPath", mCameraVideoPath);
-                } catch (IOException ex) {
-                    // Error occurred while creating the File
-                    Log.e(TAG, "Unable to create video File", ex);
-                }
-
-                // Continue only if the File was successfully created
-                if (videoFile != null) {
-                    mCameraVideoPath = "file:" + videoFile.getAbsolutePath();
-                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(videoFile));
-                } else {
-                    takeVideoIntent = null;
-                }
-
-
-                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                contentSelectionIntent.setType("video/*");
-
-                Intent[] intentArray;
-                if (takeVideoIntent != null) {
-                    intentArray = new Intent[]{takeVideoIntent};
-                } else {
-                    intentArray = new Intent[0];
-                }
-
-                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Video Chooser");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-
-                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
-
-                return true;
-            }
-        });
+        mWebView.setWebChromeClient(new MyWebChromeClient());
 
         String url = Album.SERVER_ADDRESS;
         openBrowser(url);
@@ -198,10 +165,10 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
     // Open a browser on the URL specified in the text box
     private void openBrowser(String url) {
 
-        if(!url.trim().startsWith("http://")){
-            url="http://"+url.trim();
+        if (!url.trim().startsWith("http://")) {
+            url = "http://" + url.trim();
         }
-        Log.e("url",url);
+        Log.e("url", url);
         mWebView.loadUrl(url.trim());
     }
 
@@ -229,5 +196,72 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
         // We set the WebViewClient to ensure links are consumed by the WebView rather
         // than passed to a browser if it can
         mWebView.setWebViewClient(new WebViewClient());
+        mWebView.addJavascriptInterface(new ReturnObject(handler),"ReturnObject");
+    }
+
+    private class MyWebChromeClient extends WebChromeClient {
+
+        public boolean onShowFileChooser(
+                WebView webView, ValueCallback<Uri[]> filePathCallback,
+                WebChromeClient.FileChooserParams fileChooserParams) {
+            if (mFilePathCallback != null) {
+                mFilePathCallback.onReceiveValue(null);
+            }
+            mFilePathCallback = filePathCallback;
+
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+            // Create the File where the video should go
+            File videoFile = null;
+            try {
+                videoFile = createVideoFile();
+                takeVideoIntent.putExtra("VideoPath", mCameraVideoPath);
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e(TAG, "Unable to create video File", ex);
+            }
+
+            // Continue only if the File was successfully created
+            if (videoFile != null) {
+                mCameraVideoPath = "file:" + videoFile.getAbsolutePath();
+                takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(videoFile));
+            } else {
+                takeVideoIntent = null;
+            }
+
+
+            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            contentSelectionIntent.setType("video/*");
+
+            Intent[] intentArray;
+            if (takeVideoIntent != null) {
+                intentArray = new Intent[]{takeVideoIntent};
+            } else {
+                intentArray = new Intent[0];
+            }
+
+            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Video Chooser");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+
+            return true;
+        }
+
+    }
+    private static class ReturnObject {
+        private Handler handler;
+        ReturnObject(Handler handler) {
+            this.handler = handler;
+        }
+        @JavascriptInterface
+        public void ReturnFromUpdate(String str) {
+            Log.e("js","js");
+            handler.sendEmptyMessage(RETURNFROMUPDATE);
+        }
     }
 }

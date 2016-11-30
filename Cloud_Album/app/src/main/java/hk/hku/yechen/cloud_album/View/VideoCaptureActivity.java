@@ -16,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -36,6 +38,7 @@ import hk.hku.yechen.cloud_album.R;
 public class VideoCaptureActivity extends Activity{
     private static final String TAG = VideoCaptureActivity.class.getSimpleName();
     private String uploadFileName ;
+    private String path;
 
     private Handler handler;
     private File mediaFile;
@@ -82,15 +85,30 @@ public class VideoCaptureActivity extends Activity{
                 != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.INTERNET);
         }
-
         if(permissions.size() > 0) {
             String[] permiss = permissions.toArray(new String[0]);
 
             ActivityCompat.requestPermissions(VideoCaptureActivity.this, permiss,
                     VIDEO_CAPTURE_PERMISSION);
-        } else {
-            StartVideoCapture();
         }
+        AlertDialog.Builder nameBuilder = new AlertDialog.Builder(VideoCaptureActivity.this);
+        Date now = new Date();
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
+        uploadFileName = new String("VID_" + timestamp + ".mp4");
+        final EditText editText = (EditText) LayoutInflater.from(this).inflate(R.layout.name_dialog_layout,null);
+        editText.setText(uploadFileName);
+        nameBuilder.setView(editText);
+        nameBuilder.setCancelable(false);
+        nameBuilder.setTitle("enter video name");
+        nameBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                uploadFileName = editText.getText().toString();
+                dialog.dismiss();
+                StartVideoCapture();
+            }
+        }).show();
+
     }
 
     protected void onActivityResult(final int requestCode, final int resultCode, Intent data) {
@@ -145,16 +163,13 @@ public class VideoCaptureActivity extends Activity{
                     return null;
                 }
             }
-            //3. Create a file name
-            //4. Create the file
             Date now = new Date();
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
 
-            String path = mediaStorageDir.getPath() + File.separator;
-            uploadFileName = new String(path + "VID_" + timestamp + ".mp4");
-            mediaFile = new File(path + "VID_" + timestamp + ".mp4");
-
-
+            if(uploadFileName == null || uploadFileName.equals(".mp4"))
+                uploadFileName = new String("VID_" + timestamp + ".mp4");
+            path = mediaStorageDir.getPath() + File.separator;
+            mediaFile = new File(path + uploadFileName);
 
             Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
             //5. Return the file's URI
@@ -176,7 +191,7 @@ public class VideoCaptureActivity extends Activity{
     private class UploadService implements Runnable{
         @Override
         public void run() {
-            videoManager.postVideoToServer(uploadFileName);
+            videoManager.postVideoToServer(path+uploadFileName);
             handler.sendEmptyMessage(VideoManager.UPLOADED);
         }
     }

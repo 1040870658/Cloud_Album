@@ -111,7 +111,6 @@ public class VideoManager implements Runnable {
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\""
                             + uploadFileName + "\"" + lineEnd);
-
                     dos.writeBytes(lineEnd);
 
                     // create a buffer of maximum size
