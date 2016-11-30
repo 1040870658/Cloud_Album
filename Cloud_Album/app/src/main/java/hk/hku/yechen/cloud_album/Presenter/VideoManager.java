@@ -35,12 +35,12 @@ public class VideoManager implements Runnable {
     private  List<Album> albums;
     private Handler handler;
 
-    private static String lineEnd = "\r\n";
-    private static String twoHyphens = "--";
-    private static String boundary = "*****";
+    private final String lineEnd = "\r\n";
+    private final String twoHyphens = "--";
+    private final String boundary = "*****";
 
-    private static String uploadUrl = "https://i.cs.hku.hk/~cfang/app/upload.php";
-    private static String urlPath  = "https://i.cs.hku.hk/~cfang/app/getlist.php";
+    private static final String uploadUrl = "https://i.cs.hku.hk/~cfang/app/upload.php";
+    private static final String urlPath  = "https://i.cs.hku.hk/~cfang/app/getlist.php";
 
     public VideoManager(){}
 

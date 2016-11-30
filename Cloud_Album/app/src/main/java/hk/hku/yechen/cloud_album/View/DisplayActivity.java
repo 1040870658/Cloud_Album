@@ -35,8 +35,8 @@ import hk.hku.yechen.cloud_album.R;
 
 public class DisplayActivity extends Activity {
     private VideoView videoView;
-    private Button button;
     private MediaController mediaController;
+    private RelativeLayout rl_main;
     private ViewPager viewPager;
     private List textViews;
     private List albums;
@@ -51,6 +51,7 @@ public class DisplayActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rl_main = (RelativeLayout) findViewById(R.id.rl_fmain);
         selected_index = -1;
         video_url += getIntent().getStringExtra("address");
         albums = (List) getIntent().getSerializableExtra("albums");
@@ -65,8 +66,7 @@ public class DisplayActivity extends Activity {
         videoView = (VideoView) findViewById(R.id.vv_main);
         full_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
         full_screen_param.addRule(RelativeLayout.CENTER_IN_PARENT);
-        normal_screen_param = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
-       // button = (Button) findViewById(R.id.bt_start);
+        normal_screen_param = (RelativeLayout.LayoutParams) rl_main.getLayoutParams();
         videoView.setMediaController(mediaController);
         uri = Uri.parse(video_url);
         videoView.setVideoURI(uri);
@@ -81,19 +81,9 @@ public class DisplayActivity extends Activity {
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                videoView.setLayoutParams(normal_screen_param);
-              //  button.setVisibility(View.VISIBLE);
+                rl_main.setLayoutParams(normal_screen_param);
             }
         });
-     //   button.setOnClickListener(new View.OnClickListener() {
-     //       @Override
-     //       public void onClick(View v) {
-    //            progressBar.setVisibility(View.VISIBLE);
-     //           videoView.setMediaController(mediaController);
-   //             videoView.setVideoURI(uri);
-    //            videoView.requestFocus();
-    //        }
-     //   });
 
     }
 
@@ -133,13 +123,11 @@ public class DisplayActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
         if(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270){
-       //     button.setVisibility(View.INVISIBLE);
-            videoView.setLayoutParams(full_screen_param);
+            rl_main.setLayoutParams(full_screen_param);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         else if(rotation == Surface.ROTATION_0){
-         //   button.setVisibility(View.VISIBLE);
-            videoView.setLayoutParams(normal_screen_param);
+            rl_main.setLayoutParams(normal_screen_param);
         }
         else{}
     }

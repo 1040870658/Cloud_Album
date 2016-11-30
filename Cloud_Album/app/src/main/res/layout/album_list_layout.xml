@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EED5B7">
+    android:background="@color/background">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/update_style"
+        android:src="@drawable/update"
         android:id="@+id/ib_update"
         android:background="@android:color/transparent"
         android:layout_toLeftOf="@id/ib_record"

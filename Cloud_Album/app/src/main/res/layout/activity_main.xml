@@ -10,24 +10,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hk.hku.yechen.cloud_album.View.DisplayActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/rl_fmain">
     <VideoView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:id="@+id/vv_main"/>
+    </RelativeLayout>
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:id="@+id/pb_dlg"/>
-    <android.support.v4.view.ViewPager
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@id/vv_main"
-        android:id="@+id/vp_albums"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
-
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/rl_fmain"
+        android:layout_alignParentBottom="true"
+        android:layout_height="250dp">
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/vp_albums"
+        >
     </android.support.v4.view.ViewPager>
+    </RelativeLayout>
 
 </RelativeLayout>

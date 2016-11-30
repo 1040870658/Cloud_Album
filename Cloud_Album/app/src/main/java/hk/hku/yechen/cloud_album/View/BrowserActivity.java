@@ -3,6 +3,8 @@ package hk.hku.yechen.cloud_album.View;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import hk.hku.yechen.cloud_album.Model.Album;
+import hk.hku.yechen.cloud_album.Presenter.VideoManager;
 import hk.hku.yechen.cloud_album.R;
 
 /**
@@ -73,6 +76,15 @@ public class BrowserActivity extends Activity{// Called when the activity is fir
 
         mFilePathCallback.onReceiveValue(results);
         mFilePathCallback = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(BrowserActivity.this);
+        builder.setMessage("Uploaded.");
+        builder.setTitle("Video Uploaded");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).show();
         return;
     }
 

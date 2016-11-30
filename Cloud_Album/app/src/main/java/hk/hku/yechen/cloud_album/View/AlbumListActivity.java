@@ -2,6 +2,8 @@ package hk.hku.yechen.cloud_album.View;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,8 @@ import hk.hku.yechen.cloud_album.R;
  */
 public class AlbumListActivity extends Activity {
 
+    private BitmapDrawable updated_pressed;
+    private BitmapDrawable updated;
     private AlbumAdapter albumAdapter;
     private Handler handler;
     private VideoManager videoManager;
@@ -37,6 +41,10 @@ public class AlbumListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updated_pressed = new BitmapDrawable(getResources(),
+                BitmapFactory.decodeResource(getResources(),R.drawable.update_pressed));
+        updated = new BitmapDrawable(getResources(),
+                BitmapFactory.decodeResource(getResources(),R.drawable.update));
         albums = new ArrayList();
         albumAdapter = new AlbumAdapter(AlbumListActivity.this,albums);
         setContentView(R.layout.album_list_layout);
@@ -46,6 +54,7 @@ public class AlbumListActivity extends Activity {
                 switch (msg.what){
                     case VideoManager.COMPELETION:
                         albumAdapter.notifyDataSetChanged();
+                        ib_update.setImageDrawable(updated);
                 }
             }
         };
@@ -77,6 +86,7 @@ public class AlbumListActivity extends Activity {
         ib_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ib_update.setImageDrawable(updated_pressed);
                 getListThread = new Thread(videoManager);
                 getListThread.start();
             }
