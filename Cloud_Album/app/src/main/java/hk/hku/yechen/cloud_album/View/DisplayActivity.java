@@ -47,6 +47,7 @@ public class DisplayActivity extends Activity {
 
     private String video_url = Album.UPLOAD_ADDRESS;
     private Uri uri;
+    private int initial_index;
     private RelativeLayout.LayoutParams full_screen_param;
     private RelativeLayout.LayoutParams normal_screen_param;
     @Override
@@ -55,8 +56,9 @@ public class DisplayActivity extends Activity {
         setContentView(R.layout.activity_main);
         metrics = getResources().getDisplayMetrics();
         rl_main = (RelativeLayout) findViewById(R.id.rl_fmain);
-        selected_index = -1;
         video_url += getIntent().getStringExtra("address");
+        initial_index = getIntent().getIntExtra("index",0);
+        selected_index = initial_index;
         albums = (List) getIntent().getSerializableExtra("albums");
         init();
         progressBar = (ProgressBar) findViewById(R.id.pb_dlg);
@@ -65,6 +67,7 @@ public class DisplayActivity extends Activity {
         viewPager.setAdapter(new vpAdapter(textViews));
         viewPager.setOffscreenPageLimit(5);
         viewPager.setPageMargin(2);
+        viewPager.setCurrentItem(initial_index);
         mediaController = new MediaController(this);
         videoView = (VideoView) findViewById(R.id.vv_main);
         full_screen_param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -100,6 +103,9 @@ public class DisplayActivity extends Activity {
             textView.setText(album.getName());
             textViews.add(textView);
         }
+        TextView initial_textview = (TextView) textViews.get(initial_index);
+        initial_textview.setBackgroundColor(getResources().getColor(R.color.blue));
+        initial_textview.setTextColor(Color.WHITE);
         for(int i = 0;i < albums.size();i ++){
             final int index = i;
             album = (Album) albums.get(i);
@@ -112,15 +118,14 @@ public class DisplayActivity extends Activity {
                     videoView.setVideoURI(Uri.parse(url));
                     textView.setBackgroundColor(getResources().getColor(R.color.blue));
                     textView.setTextColor(Color.WHITE);
-                    if(selected_index != -1) {
-                        TextView tmp = (TextView) textViews.get(selected_index);
-                        tmp.setTextColor(getResources().getColor(R.color.blue));
-                        tmp.setBackgroundColor(Color.WHITE);
-                    }
+                    TextView tmp = (TextView) textViews.get(selected_index);
+                    tmp.setTextColor(getResources().getColor(R.color.blue));
+                    tmp.setBackgroundColor(Color.WHITE);
                     selected_index = index;
                 }
             });
         }
+
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
