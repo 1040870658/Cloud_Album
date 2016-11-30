@@ -19,19 +19,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:id="@+id/pb_dlg"/>
-    <Button
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/bt_start"
-        android:layout_alignParentBottom="true"/>
     <android.support.v4.view.ViewPager
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_below="@id/vv_main"
         android:id="@+id/vp_albums"
-        android:layout_above="@id/bt_start"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp">
 

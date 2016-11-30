@@ -9,10 +9,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -34,6 +37,8 @@ public class VideoCaptureActivity extends Activity{
     private static final String TAG = VideoCaptureActivity.class.getSimpleName();
     private String uploadFileName ;
 
+    private Handler handler;
+    private File mediaFile;
     private static final int VIDEO_CAPTURE_REQUEST = 1111;
     private static final int VIDEO_CAPTURE_PERMISSION = 2222;
     private static VideoManager videoManager = new VideoManager();
@@ -41,8 +46,23 @@ public class VideoCaptureActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_capture_layout);
-
-        Log.d(TAG, "************************************** enter create...");
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case VideoManager.UPLOADED:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
+                        builder.setMessage("Recorded.");
+                        builder.setTitle("Video Record");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        }).show();
+                }
+            }
+        };
 
         ArrayList<String> permissions = new ArrayList<>();
 
@@ -74,17 +94,11 @@ public class VideoCaptureActivity extends Activity{
     }
 
     protected void onActivityResult(final int requestCode, final int resultCode, Intent data) {
-        if(resultCode == RESULT_OK && requestCode == VIDEO_CAPTURE_REQUEST) {
+        if(mediaFile.exists() && requestCode == VIDEO_CAPTURE_REQUEST) {
             new Thread(new UploadService()).start();
-            AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
-            builder.setMessage("Recorded.");
-            builder.setTitle("Video Record");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).show();
+        }
+        else {
+            finish();
         }
     }
 
@@ -133,7 +147,6 @@ public class VideoCaptureActivity extends Activity{
             }
             //3. Create a file name
             //4. Create the file
-            File mediaFile;
             Date now = new Date();
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
 
@@ -164,6 +177,7 @@ public class VideoCaptureActivity extends Activity{
         @Override
         public void run() {
             videoManager.postVideoToServer(uploadFileName);
+            handler.sendEmptyMessage(VideoManager.UPLOADED);
         }
     }
 }

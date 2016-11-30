@@ -31,6 +31,7 @@ public class VideoManager implements Runnable {
 
     private static final String TAG = ViewManager.class.getSimpleName();
     public static final int COMPELETION = 0x00000001;
+    public static final int UPLOADED = 0x00000002;
     private  List<Album> albums;
     private Handler handler;
 
@@ -63,12 +64,12 @@ public class VideoManager implements Runnable {
     private void parseJSON (InputStream inStream) throws Exception{
         albums.clear();
         String json = convertStreamToString(inStream);
-        Log.d("data:",json);
+     //   Log.d("data:",json);
         JSONArray array = new JSONArray(json);
         for (int i = 0;i<array.length();i++){
             JSONObject jsonObject = array.getJSONObject(i);
             Album album = new Album (jsonObject.getInt("id"),jsonObject.getString("name"),jsonObject.getString("timestamp"));
-            Log.d("video","id:"+album.getId()+"name:"+album.getName()+"time:"+album.getTimestamp());
+     //       Log.d("video","id:"+album.getId()+"name:"+album.getName()+"time:"+album.getTimestamp());
             albums.add(album);
         }
     }
@@ -137,10 +138,10 @@ public class VideoManager implements Runnable {
                     // Responses from the server (code and message)
                     int serverResponseCode = conn.getResponseCode();
                     String serverResponseMessage = conn.getResponseMessage();
-                    if(serverResponseCode == 200){
-                        Log.i(TAG,"upload success");
-                    }
-                    Log.i(TAG,"Server Response is: " + serverResponseMessage + ": " + serverResponseCode);
+                   // if(serverResponseCode == 200){
+                   //     Log.i(TAG,"upload success");
+                   // }
+                   // Log.i(TAG,"Server Response is: " + serverResponseMessage + ": " + serverResponseCode);
                     // close the streams //
                     fileInputStream.close();
                     dos.flush();
