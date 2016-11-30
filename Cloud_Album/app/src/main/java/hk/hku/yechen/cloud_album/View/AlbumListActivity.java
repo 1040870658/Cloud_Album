@@ -2,11 +2,13 @@ package hk.hku.yechen.cloud_album.View;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -29,7 +31,9 @@ public class AlbumListActivity extends Activity {
     private List albums;
     private ImageButton ib_upload;
     private ImageButton ib_record;
+    private ImageButton ib_update;
     private LinearLayoutManager linearLayoutManager;
+    private Thread getListThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +50,7 @@ public class AlbumListActivity extends Activity {
             }
         };
         videoManager = new VideoManager(albums,handler);
-        //new Thread(videoManager).start();
+        getListThread = new Thread(videoManager);
         linearLayoutManager = new LinearLayoutManager(this);
         albumList = (RecyclerView) findViewById(R.id.rv_albumlist);
         albumList.setLayoutManager(linearLayoutManager);
@@ -54,6 +58,7 @@ public class AlbumListActivity extends Activity {
 
         ib_upload = (ImageButton) findViewById(R.id.ib_upload);
         ib_record = (ImageButton) findViewById(R.id.ib_record);
+        ib_update = (ImageButton) findViewById(R.id.ib_update);
 
         ib_upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +74,19 @@ public class AlbumListActivity extends Activity {
                 startActivity(intent);
             }
         });
+        ib_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getListThread = new Thread(videoManager);
+                getListThread.start();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onRestart();
-        new Thread(videoManager).start();
+        getListThread  = new Thread(videoManager);
+        getListThread.start();
     }
 }

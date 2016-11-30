@@ -74,16 +74,18 @@ public class VideoCaptureActivity extends Activity{
     }
 
     protected void onActivityResult(final int requestCode, final int resultCode, Intent data) {
-        new Thread(new UploadService()).start();
-        AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
-        builder.setMessage("Recorded.");
-        builder.setTitle("Video Record");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).show();
+        if(resultCode == RESULT_OK && requestCode == VIDEO_CAPTURE_REQUEST) {
+            new Thread(new UploadService()).start();
+            AlertDialog.Builder builder = new AlertDialog.Builder(VideoCaptureActivity.this);
+            builder.setMessage("Recorded.");
+            builder.setTitle("Video Record");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).show();
+        }
     }
 
     @Override

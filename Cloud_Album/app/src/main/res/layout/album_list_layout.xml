@@ -28,7 +28,17 @@
         android:id="@+id/ib_upload"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        android:layout_toRightOf="@id/ib_record"/>
+        android:layout_toRightOf="@id/ib_record"
+        />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/update_style"
+        android:id="@+id/ib_update"
+        android:background="@android:color/transparent"
+        android:layout_toLeftOf="@id/ib_record"
+        android:paddingRight="5dp"
+        android:layout_alignParentBottom="true"/>
     <android.support.v7.widget.RecyclerView
         android:layout_below="@id/tv_label"
         android:layout_width="match_parent"
