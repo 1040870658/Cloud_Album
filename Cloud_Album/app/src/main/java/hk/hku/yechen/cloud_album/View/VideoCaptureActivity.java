@@ -15,11 +15,8 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.widget.EditText;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import hk.hku.yechen.cloud_album.Presenter.VideoCapture;
 import hk.hku.yechen.cloud_album.Presenter.VideoManager;
 import hk.hku.yechen.cloud_album.R;
 
