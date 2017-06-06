@@ -7,7 +7,7 @@
 At the bottom of the screen (Figure 1), there are three buttons. Every button has two states, static state and pressed state, for better interaction with users. Click the central video button to start video capture. To enable users to customize their video name for convenient recognition, this application provides a dialog to rename their video before recording (Figure 2). After recording, a dialog will show up to tell user whether the operation is successful and then automatically turn back to the refreshed list of album. (Figure 3).
 # ![Figure1](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure1.png)
   ![Figure2](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure2.png)
-2.Manually upload
+### 2.Manually upload
 At the right side of bottom screen, click the upload button, then a webview will be opened (Figure 4). Select a file then click “Here” to upload file to the server.
 # ![Figure3](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure3.png)
  ![Figure4](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure4.png)
@@ -18,11 +18,11 @@ In Figure 1, at the top there is a list showing which .mp4 files are stored at s
 4.Select and play the video
 When user chooses a specific video, a new activity will be created. A progress bar (Figure 5) will run before system is ready to play video. If the video view is ready, it will automatically play and the view is located at the top (Figure 6). Also user can rotate the screen, when the screen is horizontal, the video view will automatically change to full screen (Figure 7). Finally, users are able to pause/start the video by click the control bar in the bottom of the video player. (Figure 8).
 
-            Figure 5                         Figure 6
+# ![Figure5](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure5.png)
+# ![Figure6](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure6.png)
+# ![Figure7](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure7.png)
+# ![Figure8](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure8.png)
 
-                                 Figure 7
-
-                               Figure 8
 5.Switch to play another selected video
 In Figure 5 and Figure 6, there is a viewPager showing which video is playing right now and user can also scroll left or right to switch to another video and play it.
 
