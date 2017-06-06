@@ -12,10 +12,10 @@ At the right side of bottom screen, click the upload button, then a webview will
 # ![Figure3](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure3.png)
  ![Figure4](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure4.png)
 
-3.Display a list of uploaded videos
+### 3.Display a list of uploaded videos
 In Figure 1, at the top there is a list showing which .mp4 files are stored at server side. All the data are put into a RecyclerView so that user can scroll up and down when the view are completely filled with records.
 
-4.Select and play the video
+### 4.Select and play the video
 When user chooses a specific video, a new activity will be created. A progress bar (Figure 5) will run before system is ready to play video. If the video view is ready, it will automatically play and the view is located at the top (Figure 6). Also user can rotate the screen, when the screen is horizontal, the video view will automatically change to full screen (Figure 7). Finally, users are able to pause/start the video by click the control bar in the bottom of the video player. (Figure 8).
 
 # ![Figure5](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure5.png)
@@ -23,10 +23,10 @@ When user chooses a specific video, a new activity will be created. A progress b
 # ![Figure7](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure7.png)
 # ![Figure8](https://github.com/1040870658/Cloud_Album/raw/master/pics/figure8.png)
 
-5.Switch to play another selected video
+### 5.Switch to play another selected video
 In Figure 5 and Figure 6, there is a viewPager showing which video is playing right now and user can also scroll left or right to switch to another video and play it.
 
-Additional Features
+### Additional Features
 1.Automatically upload after recording
 In Figure 3, actually there is a service running background, when user sees the dialog “recorded”. It means not only that the video is captured but also that the captured video has uploaded to server. 
 
@@ -36,7 +36,7 @@ This function provides user with a chance to check whether the captured video fi
 3.Nice control panel for switching video
     This control panel provides popular interactive switcher to set different videos to be played while the player is working. User can drag the panel to select a video and the panel react by automatically adjust the display position while changing the style of selected video label.
 
-Implementation methods
+### Implementation methods
 1.Automatically upload
 There is an Activity called VideoCaptureActivity responsible for video capture and automatically upload. Each time the video has been created, in onActivityResult() method a thread will start to run upload service.
 
