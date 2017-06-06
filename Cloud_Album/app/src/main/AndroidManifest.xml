@@ -18,16 +18,16 @@
         <activity android:name=".View.DisplayActivity"
             android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".View.AlbumListActivity"
-            android:screenOrientation="portrait"
-            >
-            <intent-filter>
-              <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-        </activity>
+
         <activity android:name=".View.BrowserActivity"/>
         <activity android:name=".View.VideoCaptureActivity"/>
+        <activity android:name=".View.AlbumListActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
