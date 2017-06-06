@@ -1,6 +1,5 @@
-# COMP7506 Smart Phone Apps Development
-                        -Assignment 2
-                Cloud Video Album (Option 1)
+# COMP7506 Smart Phone Apps Development                        -Assignment 2
+#               Cloud Video Album (Option 1)
 
 ## Main Features
 ### 1.Video capture and Rename
